@@ -6,7 +6,7 @@
 
     <groupId>io.github.cloudsen</groupId>
     <artifactId>wx-aibot-java-sdk</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <name>wx-aibot-java-sdk</name>
@@ -44,9 +44,10 @@
 
     <properties>
         <java.version>25</java.version>
-        <maven.compiler.release>${java.version}</maven.compiler.release>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <java.release>17</java.release>
+        <maven.compiler.release>${java.release}</maven.compiler.release>
+        <maven.compiler.source>${java.release}</maven.compiler.source>
+        <maven.compiler.target>${java.release}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jackson.version>2.17.1</jackson.version>
@@ -127,7 +128,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven-javadoc-plugin.version}</version>
                 <configuration>
-                    <source>${java.version}</source>
+                    <source>${java.release}</source>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <docencoding>${project.reporting.outputEncoding}</docencoding>
                     <charset>UTF-8</charset>
