@@ -4,36 +4,34 @@
 [![Maven Central](https://img.shields.io/badge/Maven-1.0.0-orange.svg)](https://central.sonatype.com/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-**企业微信 AI Bot Java SDK** | **Enterprise WeCom AI Bot Java SDK**
+English | [中文](README.zh.md)
 
-基于 WebSocket 长连接协议实现的企业微信 AI Bot Java SDK，提供连接管理、消息收发、流式回复、媒体文件处理等完整能力。
+Enterprise WeChat AI Bot Java SDK based on WebSocket long-lived connection, providing connection management, message sending/receiving, streaming replies, media file handling, and more.
 
-Java SDK for Enterprise WeCom AI Bot based on WebSocket long-lived connection, providing connection management, message sending/receiving, streaming replies, media file handling, and more.
+## ✨ Features
 
-## ✨ 特性 | Features
-
-| 功能 | 说明 |
+| Feature | Description |
 |------|------|
-| 🔄 **自动连接管理** | 自动建立 `wss://openws.work.weixin.qq.com` 长连接并发送鉴权 |
-| 💓 **心跳保活** | 内置应用层心跳，支持断线重连、鉴权失败重试 |
-| 📬 **消息回调分发** | 支持文本、图片、文件、语音、视频、图文混排等消息类型 |
-| 🎯 **流式回复** | 同一 `req_id` 的回复串行发送，避免流式回包乱序 |
-| 📤 **主动推送** | 支持 Markdown、模板卡片、媒体消息主动发送 |
-| 📁 **文件处理** | 临时素材三步上传（init → chunk → finish）、文件下载与 AES-256-CBC 解密 |
+| 🔄 **Automatic Connection Management** | Automatically connects to `wss://openws.work.weixin.qq.com` and sends authentication request |
+| 💓 **Heartbeat Keepalive** | Built-in app-level heartbeat with reconnect and auth-failure retry |
+| 📬 **Message Callback Dispatching** | Supports text, image, file, voice, video, and mixed-content messages |
+| 🎯 **Streaming Reply** | Serializes replies with the same `req_id` to avoid out-of-order stream packets |
+| 📤 **Active Push** | Supports active Markdown, template card, and media message sending |
+| 📁 **File Handling** | 3-step temporary media upload (`init -> chunk -> finish`), file download, and AES-256-CBC decryption |
 
-## 📑 目录 | Table of Contents
+## 📑 Table of Contents
 
-- [快速开始](#-快速开始--quick-start)
-- [常用 API](#-常用-api--common-apis)
-- [心跳与重连](#-心跳与重连--heartbeat--reconnect)
-- [集成测试](#-集成测试--integration-test)
-- [说明](#-说明--notes)
-- [相关项目](#-相关项目--related)
+- [Quick Start](#-quick-start)
+- [Common APIs](#-common-apis)
+- [Heartbeat & Reconnect](#-heartbeat--reconnect)
+- [Integration Test](#-integration-test)
+- [Notes](#-notes)
+- [Related](#-related)
 - [License](#-license)
 
-## 🚀 快速开始 | Quick Start
+## 🚀 Quick Start
 
-### Maven 依赖 | Maven Dependency
+### Maven Dependency
 
 ```xml
 <dependency>
@@ -43,7 +41,7 @@ Java SDK for Enterprise WeCom AI Bot based on WebSocket long-lived connection, p
 </dependency>
 ```
 
-### 代码示例 | Code Example
+### Code Example
 
 ```java
 WeComAiBotClientOptions options = WeComAiBotClientOptions.builder("bot-id", "secret")
@@ -54,145 +52,145 @@ WeComAiBotClient client = new WeComAiBotClient(options);
 client.onAuthenticated(() -> System.out.println("authenticated"));
 client.onTextMessage(frame -> {
     String content = frame.getBody().getText() == null ? "" : frame.getBody().getText().getContent();
-    client.replySimpleText(frame, "收到：" + content);
+    client.replySimpleText(frame, "Received: " + content);
 });
-client.onEnterChat(frame -> client.replyWelcomeText(frame, "你好，我是 Java SDK 接入的机器人"));
+client.onEnterChat(frame -> client.replyWelcomeText(frame, "Hello, I am a bot powered by this Java SDK"));
 
 client.connect();
 ```
 
-> 💡 **提示** | **Tip**: 如果只关心单个事件，推荐使用 `client.onTextMessage(...)`、`client.onEnterChat(...)` 这类便捷注册方法。底层仍然是 `WeComAiBotListener`，返回值就是实际注册进去的 listener，可配合 `removeListener(listener)` 移除。如需统一管理多个回调，继续使用 `addListener(new WeComAiBotListener() { ... })` 即可。
+> 💡 **Tip**: If you only care about one event type, prefer convenience methods such as `client.onTextMessage(...)` and `client.onEnterChat(...)`. The underlying mechanism is still `WeComAiBotListener`, and the return value is the actual registered listener instance, so you can remove it by `removeListener(listener)`. If you want centralized callback management, continue using `addListener(new WeComAiBotListener() { ... })`.
 
-## 📚 常用 API | Common APIs
+## 📚 Common APIs
 
-### 连接管理 | Connection Management
+### Connection Management
 
-| 方法 | 说明 |
+| Method | Description |
 |------|------|
-| `connect()` | 建立 WebSocket 连接，并发送 `aibot_subscribe` 鉴权 |
-| `disconnect()` | 主动断开当前连接，不销毁客户端实例，后续可再次 `connect()` |
-| `isConnected()` | 返回当前是否已完成连接且鉴权成功 |
+| `connect()` | Establishes WebSocket connection and sends `aibot_subscribe` authentication |
+| `disconnect()` | Disconnects current connection without destroying client instance; can `connect()` again later |
+| `isConnected()` | Returns whether connection is established and authenticated |
 
-### 事件监听 | Event Listeners
+### Event Listeners
 
-| 方法 | 说明 |
+| Method | Description |
 |------|------|
-| `addListener(listener)` | 注册完整的 `WeComAiBotListener`，适合统一管理多种回调 |
-| `removeListener(listener)` | 移除已注册的 listener |
-| `onConnected(callback)` | 连接建立回调 |
-| `onAuthenticated(callback)` | 鉴权成功回调 |
-| `onDisconnected(callback)` | 断连回调 |
-| `onReconnecting(callback)` | 重连回调，可拿到重试次数 |
-| `onError(callback)` | 异常回调 |
-| `onMessage(callback)` | 所有消息回调 |
-| `onTextMessage(callback)` | 文本消息回调 |
-| `onImageMessage(callback)` | 图片消息回调 |
-| `onMixedMessage(callback)` | 图文混排消息回调 |
-| `onVoiceMessage(callback)` | 语音消息回调 |
-| `onFileMessage(callback)` | 文件消息回调 |
-| `onVideoMessage(callback)` | 视频消息回调 |
-| `onEvent(callback)` | 所有事件回调 |
-| `onEnterChat(callback)` | 进入会话事件回调 |
-| `onTemplateCardEvent(callback)` | 模板卡片点击事件回调 |
-| `onFeedbackEvent(callback)` | 用户反馈事件回调 |
-| `onServerDisconnectedEvent(callback)` | 服务端断连事件回调 |
+| `addListener(listener)` | Registers full `WeComAiBotListener` for centralized callback management |
+| `removeListener(listener)` | Removes a registered listener |
+| `onConnected(callback)` | Connection established callback |
+| `onAuthenticated(callback)` | Authentication success callback |
+| `onDisconnected(callback)` | Disconnection callback |
+| `onReconnecting(callback)` | Reconnect callback with retry count |
+| `onError(callback)` | Error callback |
+| `onMessage(callback)` | All message callback |
+| `onTextMessage(callback)` | Text message callback |
+| `onImageMessage(callback)` | Image message callback |
+| `onMixedMessage(callback)` | Mixed-content message callback |
+| `onVoiceMessage(callback)` | Voice message callback |
+| `onFileMessage(callback)` | File message callback |
+| `onVideoMessage(callback)` | Video message callback |
+| `onEvent(callback)` | All event callback |
+| `onEnterChat(callback)` | Enter-chat event callback |
+| `onTemplateCardEvent(callback)` | Template-card click event callback |
+| `onFeedbackEvent(callback)` | User feedback event callback |
+| `onServerDisconnectedEvent(callback)` | Server disconnected event callback |
 
-### 普通消息回复 | Standard Message Reply
+### Standard Message Reply
 
-| 方法 | 说明 |
+| Method | Description |
 |------|------|
-| `reply(frame, body)` | 通用回包方法，直接发送原始协议体，适合协议扩展字段 |
-| `replySimpleText(frame, content)` | 语义化的"简单文本回复"；底层会转成 `stream + finish=true` |
-| `replyMarkdown(frame, content)` | 回复一条 Markdown 消息 |
-| `replyMarkdown(frame, content, feedback)` | 回复 Markdown，并携带反馈标识 |
+| `reply(frame, body)` | Generic reply API for raw protocol body and extended fields |
+| `replySimpleText(frame, content)` | Semantic helper for simple text reply; internally sends `stream + finish=true` |
+| `replyMarkdown(frame, content)` | Replies with a Markdown message |
+| `replyMarkdown(frame, content, feedback)` | Replies Markdown with feedback flag |
 
-### 流式回复 | Streaming Reply
+### Streaming Reply
 
-| 方法 | 说明 |
+| Method | Description |
 |------|------|
-| `replyStream(frame, streamId, content, finish)` | 发送或刷新流式消息 |
-| `replyStream(frame, streamId, content, finish, feedback)` | 发送流式消息，并在首次回包时附带反馈标识 |
-| `replyStream(frame, streamId, content, finish, msgItems, feedback)` | 结束流式消息时附带 `msg_item` 图文混排内容 |
-| `replyStreamWithCard(frame, streamId, content, finish, templateCard)` | 回复流式消息并附带模板卡片 |
-| `replyStreamWithCard(frame, streamId, content, finish, templateCard, msgItems, streamFeedback, cardFeedback)` | 流式回复的完整形态，支持图文混排和反馈字段 |
+| `replyStream(frame, streamId, content, finish)` | Sends or refreshes streaming message |
+| `replyStream(frame, streamId, content, finish, feedback)` | Sends streaming message with feedback in first packet |
+| `replyStream(frame, streamId, content, finish, msgItems, feedback)` | Attaches `msg_item` mixed-content payload when finishing stream |
+| `replyStreamWithCard(frame, streamId, content, finish, templateCard)` | Streaming reply with template card |
+| `replyStreamWithCard(frame, streamId, content, finish, templateCard, msgItems, streamFeedback, cardFeedback)` | Full streaming form with mixed-content and feedback fields |
 
-> ⚠️ **当前实践结论** | **Current Practice Conclusion**
-> - `msg_item` 图文混排和 `stream_with_template_card` 在 SDK 侧已封装，但当前企业微信客户端中通常不会按预期渲染
-> - 如果需要用户侧稳定可见，优先使用 `replyStream(...)`、`replyMarkdown(...)`、`replyTemplateCard(...)` 分开发送
+> ⚠️ **Current Practice Conclusion**
+> - `msg_item` mixed-content and `stream_with_template_card` are wrapped in SDK, but currently are usually not rendered as expected in WeChat client
+> - For stable user-visible output, prefer sending `replyStream(...)`, `replyMarkdown(...)`, and `replyTemplateCard(...)` separately
 
-### 欢迎语回复 | Welcome Message Reply
+### Welcome Message Reply
 
-| 方法 | 说明 |
+| Method | Description |
 |------|------|
-| `replyWelcome(frame, body)` | 欢迎语通用回包方法，需在 `enter_chat` 事件后 5 秒内调用 |
-| `replyWelcomeText(frame, content)` | 回复文本欢迎语 |
-| `replyWelcomeTemplateCard(frame, templateCard)` | 回复欢迎模板卡片 |
-| `replyWelcomeTemplateCard(frame, templateCard, feedback)` | 回复欢迎模板卡片，并附带反馈标识 |
+| `replyWelcome(frame, body)` | Generic welcome reply; must be called within 5 seconds after `enter_chat` |
+| `replyWelcomeText(frame, content)` | Replies with text welcome message |
+| `replyWelcomeTemplateCard(frame, templateCard)` | Replies with welcome template card |
+| `replyWelcomeTemplateCard(frame, templateCard, feedback)` | Welcome template card with feedback flag |
 
-### 模板卡片 | Template Card
+### Template Card
 
-| 方法 | 说明 |
+| Method | Description |
 |------|------|
-| `replyTemplateCard(frame, templateCard, feedback)` | 对消息回调直接回复模板卡片 |
-| `updateTemplateCard(frame, templateCard, userIds)` | 响应 `template_card_event` 更新已有卡片，需在事件后 5 秒内调用 |
+| `replyTemplateCard(frame, templateCard, feedback)` | Direct template card reply in message callback |
+| `updateTemplateCard(frame, templateCard, userIds)` | Updates existing card on `template_card_event`; must be called within 5 seconds |
 
-### 主动推送 | Active Push
+### Active Push
 
-| 方法 | 说明 |
+| Method | Description |
 |------|------|
-| `sendMessage(chatId, body)` | 主动发送通用消息体 |
-| `sendMessage(chatId, chatType, body)` | 主动发送通用消息体，并显式指定单聊/群聊 |
-| `sendMarkdownMessage(chatId, content)` | 主动发送 Markdown |
-| `sendMarkdownMessage(chatId, chatType, content, feedback)` | 主动发送 Markdown，并附带 chatType、feedback |
-| `sendTemplateCardMessage(chatId, templateCard)` | 主动发送模板卡片 |
-| `sendTemplateCardMessage(chatId, chatType, templateCard, feedback)` | 主动发送模板卡片，并附带 chatType、feedback |
+| `sendMessage(chatId, body)` | Active send with generic message body |
+| `sendMessage(chatId, chatType, body)` | Active send with explicit one-to-one/group chat type |
+| `sendMarkdownMessage(chatId, content)` | Active Markdown send |
+| `sendMarkdownMessage(chatId, chatType, content, feedback)` | Active Markdown send with chatType and feedback |
+| `sendTemplateCardMessage(chatId, templateCard)` | Active template card send |
+| `sendTemplateCardMessage(chatId, chatType, templateCard, feedback)` | Active template card send with chatType and feedback |
 
-### 媒体消息 | Media Message
+### Media Message
 
-| 方法 | 说明 |
+| Method | Description |
 |------|------|
-| `replyMedia(frame, mediaType, mediaId)` | 对回调消息回复媒体消息，支持 `file/image/voice/video` |
-| `replyMedia(frame, mediaType, mediaId, title, description)` | 回复视频时可补充标题和描述 |
-| `sendMediaMessage(chatId, mediaType, mediaId)` | 主动发送媒体消息 |
-| `sendMediaMessage(chatId, chatType, mediaType, mediaId, title, description)` | 主动发送媒体消息，并支持群聊类型和视频扩展字段 |
+| `replyMedia(frame, mediaType, mediaId)` | Replies media message for callback, supports `file/image/voice/video` |
+| `replyMedia(frame, mediaType, mediaId, title, description)` | Adds title and description for video reply |
+| `sendMediaMessage(chatId, mediaType, mediaId)` | Actively sends media message |
+| `sendMediaMessage(chatId, chatType, mediaType, mediaId, title, description)` | Active media send with chat type and video extension fields |
 
-### 文件处理 | File Handling
+### File Handling
 
-| 方法 | 说明 |
+| Method | Description |
 |------|------|
-| `uploadMedia(fileBytes, options)` | 走 `init -> chunk -> finish` 上传临时素材，返回 `media_id` |
-| `downloadFile(url, aesKey)` | 下载文件；若传入 `aesKey`，会自动做 AES-256-CBC 解密 |
+| `uploadMedia(fileBytes, options)` | Uploads temporary media via `init -> chunk -> finish`, returns `media_id` |
+| `downloadFile(url, aesKey)` | Downloads file; if `aesKey` provided, decrypts with AES-256-CBC automatically |
 
-## 💓 心跳与重连 | Heartbeat & Reconnect
+## 💓 Heartbeat & Reconnect
 
-SDK 内置了应用层心跳，不需要业务侧自己发 `ping`。
+The SDK has built-in application-level heartbeat, so business code does not need to send `ping` manually.
 
-### 心跳触发时机 | Heartbeat Timing
+### Heartbeat Timing
 
-- 只有在 `aibot_subscribe` 鉴权成功后，SDK 才会启动心跳
-- 连接断开、手动 `disconnect()`、`close()` 时，心跳任务会立即停止
+- Heartbeat starts only after `aibot_subscribe` authentication succeeds
+- Heartbeat task stops immediately when connection is disconnected, manually `disconnect()` is called, or `close()` is called
 
-### 心跳发送方式 | Heartbeat Method
+### Heartbeat Method
 
-- 心跳命令固定为 `ping`
-- 默认每 `30` 秒发送一次，可通过 `heartbeatIntervalMillis(...)` 调整
-- 每次心跳都会生成独立 `req_id`，并等待服务端 ack
+- Heartbeat command is fixed as `ping`
+- Default interval is every `30` seconds, configurable via `heartbeatIntervalMillis(...)`
+- Each heartbeat has its own `req_id` and waits for server ack
 
-### 失活判定 | Liveness Detection
+### Liveness Detection
 
-- 心跳 ack 和普通请求共用同一套超时机制，默认超时时间是 `10` 秒，可通过 `requestTimeoutMillis(...)` 调整
-- 连续 `2` 次心跳未收到 ack，SDK 会主动关闭当前 WebSocket，并视为连接失活
-- 关闭连接后，未完成的回复、发送、上传等 pending 请求会统一失败，避免一直挂起
+- Heartbeat ack and regular requests share the same timeout mechanism; default timeout is `10` seconds, configurable via `requestTimeoutMillis(...)`
+- If `2` consecutive heartbeats do not receive ack, SDK closes the current WebSocket and treats the connection as dead
+- After connection closes, pending reply/send/upload requests fail together to avoid hanging
 
-### 自动重连 | Auto Reconnect
+### Auto Reconnect
 
-- 非手动断开时，SDK 会自动重连
-- 默认采用指数退避：基准延迟 `1` 秒，逐步放大，最大不超过 `30` 秒
-- 普通断线默认最多重连 `10` 次，可通过 `maxReconnectAttempts(...)` 调整
-- 鉴权失败默认最多重试 `5` 次，可通过 `maxAuthFailureAttempts(...)` 调整
-- 如果收到服务端的 `disconnected_event`，SDK 会停止自动重连，等待业务侧重新发起连接
+- SDK auto reconnects unless disconnected manually
+- Default strategy is exponential backoff: base delay `1` second, gradually increasing up to `30` seconds max
+- Normal disconnect reconnect attempts default to `10`, configurable via `maxReconnectAttempts(...)`
+- Auth failure retries default to `5`, configurable via `maxAuthFailureAttempts(...)`
+- If server sends `disconnected_event`, SDK stops auto reconnect and waits for business code to reconnect
 
-### 推荐配置 | Recommended Configuration
+### Recommended Configuration
 
 ```java
 WeComAiBotClientOptions options = WeComAiBotClientOptions.builder("bot-id", "secret")
@@ -203,21 +201,21 @@ WeComAiBotClientOptions options = WeComAiBotClientOptions.builder("bot-id", "sec
         .build();
 ```
 
-> 💡 **提示** | **Tip**: 如果网络环境不稳定，可以把心跳间隔调到 `10~15` 秒，同时适当缩短 `requestTimeoutMillis`，更快发现死连接。
+> 💡 **Tip**: In unstable networks, set heartbeat interval to `10~15` seconds and reduce `requestTimeoutMillis` appropriately to detect dead connections faster.
 
-## 🧪 集成测试 | Integration Test
+## 🧪 Integration Test
 
-模块内提供了真实企业微信连通测试：
+The module includes real Enterprise WeChat connectivity test:
 
-- **测试类** | **Test Class**: `WeComAiBotClientIntegrationTest`
-- **默认跳过** | **Skipped by Default**: 不影响普通 `mvn test`
-- **启用后会真实连接企业微信** | **Real Connection**: Connects to Enterprise WeCom when enabled
-- **收到消息后会根据用户消息内容选择不同回复形式** | **Dynamic Reply**: Replies based on user message content
-- **只有收到文本指令 `结束测试`，测试才会结束** | **Stop Condition**: Ends when receiving `结束测试` text command
+- **Test Class**: `WeComAiBotClientIntegrationTest`
+- **Skipped by Default**: Does not affect regular `mvn test`
+- **Real Connection**: Connects to Enterprise WeChat when enabled
+- **Dynamic Reply**: Chooses reply form based on incoming user text
+- **Stop Condition**: Test ends only when text command `结束测试` is received
 
-### 文本触发指令 | Text Commands
+### Text Commands
 
-| 指令 | 调用方法 |
+| Command | API |
 |------|---------|
 | `原始回复` | `reply(frame, body)` |
 | `简单文本` | `replySimpleText(...)` |
@@ -233,19 +231,19 @@ WeComAiBotClientOptions options = WeComAiBotClientOptions.builder("bot-id", "sec
 | `主动图片` | `uploadMedia(...) + sendMediaMessage(...)` |
 | `回复文件` / `回复语音` / `回复视频` | `uploadMedia(...) + replyMedia(...)` |
 | `主动文件` / `主动语音` / `主动视频` | `uploadMedia(...) + sendMediaMessage(...)` |
-| `结束测试` | 回复确认消息，并结束测试 |
+| `结束测试` | Sends confirmation reply and then exits test |
 
-### 事件与非文本消息 | Events & Non-text Messages
+### Events & Non-text Messages
 
-| 事件/消息类型 | 处理方式 |
+| Event/Message Type | Handling |
 |--------------|---------|
-| `enter_chat` | 默认调用 `replyWelcomeTemplateCard(...)` |
-| `template_card_event` | 优先调用 `updateTemplateCard(...)` |
-| 图片 / 文件 / 视频消息 | 调用 `downloadFile(...)` 后回一条确认消息 |
-| 语音消息 | 回 `已收到：语音消息` |
-| 图文混排消息 | 回一条 Markdown 确认消息 |
+| `enter_chat` | Calls `replyWelcomeTemplateCard(...)` by default |
+| `template_card_event` | Calls `updateTemplateCard(...)` first |
+| Image / File / Video message | Calls `downloadFile(...)` then replies confirmation text |
+| Voice message | Replies `已收到：语音消息` |
+| Mixed-content message | Replies a Markdown confirmation message |
 
-### 执行方式 | Execution
+### Execution
 
 ```bash
 mvn -Dtest=WeComAiBotClientIntegrationTest \
@@ -255,64 +253,62 @@ mvn -Dtest=WeComAiBotClientIntegrationTest \
   test
 ```
 
-### 可选参数 | Optional Parameters
+### Optional Parameters
 
-| 参数 | 说明 |
+| Parameter | Description |
 |------|------|
-| `-Dwx.aibot.scene=...` | 场景标识 |
-| `-Dwx.aibot.plugVersion=...` | 插件版本 |
-| `-Dwx.aibot.wsUrl=...` | WebSocket 地址 |
-| `-Dwx.aibot.waitSeconds=300` | 等待超时时间 |
-| `-Dwx.aibot.requestTimeoutSeconds=15` | 请求超时时间 |
-| `-Dwx.aibot.welcomeMode=card|text|raw` | 欢迎语模式 |
-| `-Dwx.aibot.downloadDir=/tmp/wx-aibot-it-downloads` | 下载目录 |
-| `-Dwx.aibot.imagePath=/abs/path/demo.png` | 测试图片路径 |
-| `-Dwx.aibot.filePath=/abs/path/demo.pdf` | 测试文件路径 |
-| `-Dwx.aibot.voicePath=/abs/path/demo.amr` | 测试语音路径 |
-| `-Dwx.aibot.videoPath=/abs/path/demo.mp4` | 测试视频路径 |
+| `-Dwx.aibot.scene=...` | Scene identifier |
+| `-Dwx.aibot.plugVersion=...` | Plugin version |
+| `-Dwx.aibot.wsUrl=...` | WebSocket URL |
+| `-Dwx.aibot.waitSeconds=300` | Wait timeout |
+| `-Dwx.aibot.requestTimeoutSeconds=15` | Request timeout |
+| `-Dwx.aibot.welcomeMode=card|text|raw` | Welcome mode |
+| `-Dwx.aibot.downloadDir=/tmp/wx-aibot-it-downloads` | Download directory |
+| `-Dwx.aibot.imagePath=/abs/path/demo.png` | Test image path |
+| `-Dwx.aibot.filePath=/abs/path/demo.pdf` | Test file path |
+| `-Dwx.aibot.voicePath=/abs/path/demo.amr` | Test voice path |
+| `-Dwx.aibot.videoPath=/abs/path/demo.mp4` | Test video path |
 
-### 环境变量 | Environment Variables
+### Environment Variables
 
-也支持通过环境变量配置：
+You can also configure via environment variables:
 
-| 变量名 | 说明 |
+| Variable | Description |
 |--------|------|
 | `WECOM_AIBOT_BOT_ID` | Bot ID |
 | `WECOM_AIBOT_SECRET` | Secret |
-| `WECOM_AIBOT_SCENE` | 场景标识 |
-| `WECOM_AIBOT_PLUG_VERSION` | 插件版本 |
-| `WECOM_AIBOT_WS_URL` | WebSocket 地址 |
-| `WECOM_AIBOT_WAIT_SECONDS` | 等待超时时间 |
-| `WECOM_AIBOT_REQUEST_TIMEOUT_SECONDS` | 请求超时时间 |
-| `WECOM_AIBOT_WELCOME_MODE` | 欢迎语模式 |
-| `WECOM_AIBOT_DOWNLOAD_DIR` | 下载目录 |
-| `WECOM_AIBOT_IMAGE_PATH` | 测试图片路径 |
-| `WECOM_AIBOT_FILE_PATH` | 测试文件路径 |
-| `WECOM_AIBOT_VOICE_PATH` | 测试语音路径 |
-| `WECOM_AIBOT_VIDEO_PATH` | 测试视频路径 |
+| `WECOM_AIBOT_SCENE` | Scene identifier |
+| `WECOM_AIBOT_PLUG_VERSION` | Plugin version |
+| `WECOM_AIBOT_WS_URL` | WebSocket URL |
+| `WECOM_AIBOT_WAIT_SECONDS` | Wait timeout |
+| `WECOM_AIBOT_REQUEST_TIMEOUT_SECONDS` | Request timeout |
+| `WECOM_AIBOT_WELCOME_MODE` | Welcome mode |
+| `WECOM_AIBOT_DOWNLOAD_DIR` | Download directory |
+| `WECOM_AIBOT_IMAGE_PATH` | Test image path |
+| `WECOM_AIBOT_FILE_PATH` | Test file path |
+| `WECOM_AIBOT_VOICE_PATH` | Test voice path |
+| `WECOM_AIBOT_VIDEO_PATH` | Test video path |
 
-### 说明 | Notes
+### Test Notes
 
-- `welcomeMode=card`：调用 `replyWelcomeTemplateCard(...)`
-- `welcomeMode=text`：调用 `replyWelcomeText(...)`
-- `welcomeMode=raw`：调用 `replyWelcome(frame, body)`
-- `回复图片` / `主动图片` 未配置 `imagePath` 时，会自动使用内置测试图片
-- 文件、语音、视频相关指令只有在对应本地文件路径已配置时才会执行，否则会明确提示已跳过
+- `welcomeMode=card`: calls `replyWelcomeTemplateCard(...)`
+- `welcomeMode=text`: calls `replyWelcomeText(...)`
+- `welcomeMode=raw`: calls `replyWelcome(frame, body)`
+- If `imagePath` is not configured, `回复图片` and `主动图片` use a built-in test image
+- File/voice/video related commands are executed only if corresponding local file path is configured; otherwise skipped with explicit message
 
-## 📄 说明 | Notes
+## 📄 Notes
 
-- `sendMessage` / `reply` 支持直接传 `Map<String, Object>`，便于兼容官方协议新增字段
-- `replySimpleText` 是对普通消息"文本回复"的语义封装，底层实际发送的是 `stream + finish=true`
-- `replyStreamWithCard` 和 `msg_item` 已按协议封装，但当前企业微信客户端中通常不渲染；即使服务端 ack 成功，微信侧也可能不展示
-- 涉及流式图文或流式卡片的场景，建议优先回退为 `replyStream(...)`、`replyMarkdown(...)`、`replyTemplateCard(...)` 分开发送
-- 当前版本优先覆盖长连接核心协议和常用便捷方法，模板卡片复杂结构建议直接按官方 JSON 组装为 `Map` 传入
+- `sendMessage` / `reply` supports direct `Map<String, Object>` payload for protocol extension compatibility
+- `replySimpleText` is a semantic helper for plain text reply; internally it sends `stream + finish=true`
+- `replyStreamWithCard` and `msg_item` are wrapped by protocol, but usually not rendered on current WeChat clients even when server ack is successful
+- For streaming mixed-content or streaming card scenarios, prefer fallback to `replyStream(...)`, `replyMarkdown(...)`, and `replyTemplateCard(...)` separately
+- Current release prioritizes long-connection core protocol and common convenience APIs; for complex template card structures, assemble official JSON as `Map` directly
 
-## 🔗 相关项目 | Related
+## 🔗 Related
 
-- [企业微信 AI Bot 官方文档](https://developer.work.weixin.qq.com/document/path/101463)
+- [Enterprise WeChat AI Bot Official Docs](https://developer.work.weixin.qq.com/document/path/101463)
 
 ## 📝 License
 
 Distributed under the Apache License 2.0. See [LICENSE](LICENSE) for more information.
-
-基于 Apache License 2.0 分发。更多信息请查看 [LICENSE](LICENSE)。
