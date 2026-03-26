@@ -1,7 +1,7 @@
 # wx-aibot-java-sdk
 
 [![Java 17+](https://img.shields.io/badge/Java-17%2B-blue.svg)](https://openjdk.org/projects/jdk/17/)
-[![Maven Central](https://img.shields.io/badge/Maven-1.0.0-orange.svg)](https://central.sonatype.com/)
+[![Maven Central](https://img.shields.io/badge/Maven-1.1.0-orange.svg)](https://central.sonatype.com/artifact/io.github.cloudsen/wx-aibot-java-sdk)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 [English](README.md) | 中文
@@ -37,7 +37,7 @@
 <dependency>
     <groupId>com.github.clouds3n.ai</groupId>
     <artifactId>wx-aibot-java-sdk</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
