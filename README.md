@@ -4,11 +4,11 @@
 [![Maven Central](https://img.shields.io/badge/Maven-1.0.0-orange.svg)](https://central.sonatype.com/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
-**企业微信 AI Bot Java SDK** | **Enterprise WeChat AI Bot Java SDK**
+**企业微信 AI Bot Java SDK** | **Enterprise WeCom AI Bot Java SDK**
 
 基于 WebSocket 长连接协议实现的企业微信 AI Bot Java SDK，提供连接管理、消息收发、流式回复、媒体文件处理等完整能力。
 
-Java SDK for Enterprise WeChat AI Bot based on WebSocket long-lived connection, providing connection management, message sending/receiving, streaming replies, media file handling, and more.
+Java SDK for Enterprise WeCom AI Bot based on WebSocket long-lived connection, providing connection management, message sending/receiving, streaming replies, media file handling, and more.
 
 ## ✨ 特性 | Features
 
@@ -211,7 +211,7 @@ WeComAiBotClientOptions options = WeComAiBotClientOptions.builder("bot-id", "sec
 
 - **测试类** | **Test Class**: `WeComAiBotClientIntegrationTest`
 - **默认跳过** | **Skipped by Default**: 不影响普通 `mvn test`
-- **启用后会真实连接企业微信** | **Real Connection**: Connects to Enterprise WeChat when enabled
+- **启用后会真实连接企业微信** | **Real Connection**: Connects to Enterprise WeCom when enabled
 - **收到消息后会根据用户消息内容选择不同回复形式** | **Dynamic Reply**: Replies based on user message content
 - **只有收到文本指令 `结束测试`，测试才会结束** | **Stop Condition**: Ends when receiving `结束测试` text command
 
