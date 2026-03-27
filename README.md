@@ -6,13 +6,13 @@
 
 English | [中文](README.zh.md)
 
-Java SDK collection for two independent WeChat-related protocol integrations, published in one Maven artifact.
+Java SDK collection for WeCom AI Bot and Weixin protocol integration, published in one Maven artifact.
 
 ## Modules
 
 | Module | Package | Description | Docs |
 |------|------|------|------|
-| WeCom | `io.github.cloudsen.ai.wecom` | Enterprise WeChat AI Bot SDK based on WebSocket long-lived connection | [English](README.wecom.md) / [中文](README.wecom.zh.md) |
+| WeCom | `io.github.cloudsen.ai.wecom` | Enterprise WeCom AI Bot SDK based on WebSocket long-lived connection | [English](README.wecom.md) / [中文](README.wecom.zh.md) |
 | Weixin | `io.github.cloudsen.ai.weixin` | Java wrapper around the HTTP, QR login, long-polling, and CDN protocol exposed by `@tencent-weixin/openclaw-weixin` | [English](README.weixin.md) / [中文](README.weixin.zh.md) |
 
 ## Maven

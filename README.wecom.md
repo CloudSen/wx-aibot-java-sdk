@@ -2,7 +2,7 @@
 
 [Overview](README.md) | WeCom | [Weixin](README.weixin.md) | [中文](README.wecom.zh.md)
 
-Enterprise WeChat AI Bot Java SDK based on WebSocket long-lived connection.
+Enterprise WeCom AI Bot Java SDK based on WebSocket long-lived connection.
 
 Package: `io.github.cloudsen.ai.wecom`
 
@@ -136,10 +136,10 @@ WeComAiBotClientOptions options = WeComAiBotClientOptions.builder("bot-id", "sec
 
 ## Integration Test
 
-Real Enterprise WeChat connectivity test is available in `WeComAiBotClientIntegrationTest`.
+Real Enterprise WeCom connectivity test is available in `WeComAiBotClientIntegrationTest`.
 
 - Skipped by default, so regular `mvn test` is unaffected
-- Connects to the real Enterprise WeChat WebSocket service
+- Connects to the real Enterprise WeCom WebSocket service
 - Chooses different reply forms based on incoming user text
 - Ends only when text command `结束测试` is received
 
@@ -216,7 +216,7 @@ mvn -Dtest=WeComAiBotClientIntegrationTest \
 
 ## Related
 
-- [Enterprise WeChat AI Bot Official Docs](https://developer.work.weixin.qq.com/document/path/101463)
+- [Enterprise WeCom AI Bot Official Docs](https://developer.work.weixin.qq.com/document/path/101463)
 
 ## License
 
