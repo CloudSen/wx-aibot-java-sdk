@@ -170,6 +170,8 @@ mvn -Dtest=WeixinClientIntegrationTest \
 
 - This SDK targets the protocol used by `@tencent-weixin/openclaw-weixin`, not the CLI installer package.
 - API calls after login need a valid `bot_token`.
+- There is currently no `bot_token` refresh mechanism in this SDK or the underlying `openclaw-weixin` implementation.
+- If `bot_token` expires or becomes invalid, you must run the QR login flow again to obtain a new token.
 - Media upload uses AES-128-ECB encryption before CDN upload.
 - Inbound CDN download can be decrypted through `downloadMedia(...)` or `WeixinCdnCrypto`.
 - See [docs/openclaw-weixin-protocol.md](docs/openclaw-weixin-protocol.md) for protocol analysis.

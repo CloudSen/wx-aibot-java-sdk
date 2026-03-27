@@ -170,6 +170,8 @@ mvn -Dtest=WeixinClientIntegrationTest \
 
 - 这个 SDK 对应的是 `@tencent-weixin/openclaw-weixin` 的底层协议，不是 CLI 安装器。
 - 登录后的接口调用需要有效的 `bot_token`。
+- 当前无论是本 SDK 还是底层 `openclaw-weixin`，都没有 `bot_token` 自动刷新机制。
+- 如果 `bot_token` 失效或过期，必须重新走扫码登录，拿到新的 token。
 - 媒体上传前会做 AES-128-ECB 加密。
 - 入站消息媒体可通过 `downloadMedia(...)` 或 `WeixinCdnCrypto` 解密下载。
 - 更完整的协议分析见 [docs/openclaw-weixin-protocol.md](docs/openclaw-weixin-protocol.md)。
