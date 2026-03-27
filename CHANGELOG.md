@@ -9,6 +9,39 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+## [2.0.0] - 2026-03-27
+
+### ⚠️ 不兼容变更 | Breaking Changes
+
+- 企业微信相关类从原先的 `io.github.cloudsen.ai.*` 迁移到 `io.github.cloudsen.ai.wecom.*`
+- 微信协议相关类独立放入 `io.github.cloudsen.ai.weixin.*`
+- 微信协议类去掉 `OpenClaw` 前缀，例如 `OpenClawWeixinClient` 已改为 `WeixinClient`
+- 共享 JSON 支持类迁移到 `io.github.cloudsen.ai.common.JsonSupport`
+- 这是一次不兼容升级，旧版本 import 路径不能直接继续使用，接入代码需要跟随包路径调整
+
+### ✨ 新增 | Added
+
+- 新增 `io.github.cloudsen.ai.weixin` 协议层 Java SDK
+- 支持微信二维码登录、长轮询拉消息、文本消息发送、输入态发送
+- 支持 CDN 媒体上传、下载与 `AES-128-ECB` 加解密
+- 新增 `docs/openclaw-weixin-protocol.md` 协议分析文档
+- 新增真实扫码启动的 `WeixinClientIntegrationTest`
+
+### 🔧 优化 | Changed
+
+- WeCom 代码整体迁移到 `io.github.cloudsen.ai.wecom` 包下
+- README 拆分为独立的 WeCom 和 Weixin 文档
+- Maven 依赖示例统一为 `io.github.cloudsen:wx-aibot-java-sdk:2.0.0`
+
+### 🧪 测试 | Testing
+
+- 新增 `WeixinClientTest`
+- 新增 `WeixinClientIntegrationTest`
+- 保留并迁移 `WeComAiBotClientTest`
+- 保留并迁移 `WeComAiBotClientIntegrationTest`
+
 ## [1.0.0] - 2024-03-26
 
 ### ✨ 新增 | Added
@@ -87,3 +120,4 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ---
 
 **[1.0.0]**: 2024-03-26 - Initial Release | 初始发布
+**[2.0.0]**: 2026-03-27 - Breaking package split for WeCom and Weixin | WeCom 与 Weixin 拆包的不兼容升级

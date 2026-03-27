@@ -6,11 +6,11 @@
 
     <groupId>io.github.cloudsen</groupId>
     <artifactId>wx-aibot-java-sdk</artifactId>
-    <version>1.1.0</version>
+    <version>2.0.0</version>
     <packaging>jar</packaging>
 
     <name>wx-aibot-java-sdk</name>
-    <description>Enterprise WeChat AI Bot Java SDK based on WebSocket long-lived connection</description>
+    <description>Java SDK for WeCom AI Bot and Weixin protocol integration</description>
     <url>https://github.com/clouds3n/wx-aibot-java-sdk</url>
 
     <licenses>
