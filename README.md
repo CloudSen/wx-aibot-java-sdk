@@ -6,7 +6,7 @@
 
 English | [中文](README.zh.md)
 
-Enterprise WeChat AI Bot Java SDK based on WebSocket long-lived connection, providing connection management, message sending/receiving, streaming replies, media file handling, and more.
+Enterprise WeCom AI Bot Java SDK based on WebSocket long-lived connection, providing connection management, message sending/receiving, streaming replies, media file handling, and more.
 
 ## ✨ Features
 
@@ -115,7 +115,7 @@ client.connect();
 | `replyStreamWithCard(frame, streamId, content, finish, templateCard, msgItems, streamFeedback, cardFeedback)` | Full streaming form with mixed-content and feedback fields |
 
 > ⚠️ **Current Practice Conclusion**
-> - `msg_item` mixed-content and `stream_with_template_card` are wrapped in SDK, but currently are usually not rendered as expected in WeChat client
+> - `msg_item` mixed-content and `stream_with_template_card` are wrapped in SDK, but currently are usually not rendered as expected in WeCom app
 > - For stable user-visible output, prefer sending `replyStream(...)`, `replyMarkdown(...)`, and `replyTemplateCard(...)` separately
 
 ### Welcome Message Reply
