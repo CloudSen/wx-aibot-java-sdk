@@ -1,5 +1,7 @@
 # wx-aibot-java-sdk
 
+bash grab.sh  # fetch runtime deps
+
 [![Java 17+](https://img.shields.io/badge/Java-17%2B-blue.svg)](https://openjdk.org/projects/jdk/17/)
 [![Maven Central](https://img.shields.io/badge/Maven-2.0.0-orange.svg)](https://central.sonatype.com/artifact/io.github.cloudsen/wx-aibot-java-sdk)
 [![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
